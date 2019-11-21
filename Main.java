@@ -15,6 +15,8 @@ import javax.swing.JTextField;
  
 public class Main
 {
+	JPanel panel = new JPanel(); 
+	
 	public static void main(String[] args)
 	{
 		/* ___________________________________ */
@@ -34,7 +36,7 @@ public class Main
          * positions in a JFrame. Inside panels we can add text 
          * fields, buttons and other components.
          */
-        JPanel panel = new JPanel();    
+           
         // adding panel to frame
         frame.add(panel);
         /* calling user defined method for adding components
@@ -119,7 +121,7 @@ public class Main
 		String quickpickString = "";
 		String winningnumbersString = "";
 
-		while (matches != 3)
+		while (matches != 5)
 		{
 			LotteryMath.FillArray(quickpick);
 			LotteryMath.FillArray(winningnumbers);
