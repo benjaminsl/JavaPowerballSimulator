@@ -14,40 +14,53 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField; 
+
+import javax.swing.JOptionPane;
  
 public class Main
 {
 	public static void main(String[] args)
 	{
-		/* ___________________________________ */
-		/*                                     */
-		/*           SWING STUFF               */
-		/* ___________________________________ */
-		
-		 // Creating instance of JFrame
-        //JFrame frame = new JFrame("My First Swing Example");
-        // Setting the width and height of frame
-		JFrame frame = new JFrame("Powerball Simulator");
-        frame.setSize(350, 250);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	/* ___________________________________ */
+	/*                                     */
+	/*           SWING STUFF               */
+	/* ___________________________________ */
 
-        frame.setLayout(null);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	// get when to stop program from user using JOption Dialog Box
+	String numbersThatHaveToMatchString = JOptionPane.showInputDialog("Welcome to the Powerball Simulator. Please enter how many numbers you want to match to end simulation.");	
 
-		/*********** LABELS FOR WINDOW *****************/
-        JLabel userLabel = new JLabel("User: ");
-        userLabel.setBounds(10, 20, 150, 25);
-        frame.add(userLabel);
+	// convert the string from j option pane box to int so it can be used further down in program
+	int numbersThatHaveToMatchInt = Integer.parseInt(numbersThatHaveToMatchString);
+
+	while (numbersThatHaveToMatchInt < 1 || numbersThatHaveToMatchInt > 6)
+	{
+		numbersThatHaveToMatchString = JOptionPane.showInputDialog("Please enter a number between 1 and 6 (inclusivly).");	
+		numbersThatHaveToMatchInt = Integer.parseInt(numbersThatHaveToMatchString);
+	}
+
+  // Creating instance of JFrame
+  // Setting the width and height of frame
+	JFrame frame = new JFrame("Powerball Simulator");
+  frame.setSize(350, 250);
+  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+  frame.setLayout(null);
+	frame.setVisible(true);
+	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	/*********** LABELS FOR WINDOW *****************/
+   JLabel userLabel = new JLabel("User: ");
+   userLabel.setBounds(10, 20, 150, 25);
+   frame.add(userLabel);
 		
 		// user ticket numbers
 		JLabel userNumbers = new JLabel("");
 		userNumbers.setBounds(120, 20, 150, 25);
 		frame.add(userNumbers);
 		
-        JLabel winningLabel = new JLabel("Winning Numbers: ");
-        winningLabel.setBounds(10, 50, 150, 25);
-        frame.add(winningLabel);
+    JLabel winningLabel = new JLabel("Winning Numbers: ");
+    winningLabel.setBounds(10, 50, 150, 25);
+    frame.add(winningLabel);
 		
 		// user ticket numbers
 		JLabel winningNumbers = new JLabel("");
@@ -71,11 +84,6 @@ public class Main
 		
 		/******* ENDING LABELS FOR WINDOW ****************/
 
-		// Creating login button
-        JButton beginButton = new JButton("Begin");
-        beginButton.setBounds(10, 80, 80, 25);
-        frame.add(beginButton);
-		
 		/* ___________________________________ */
 		/*                                     */
 		/*         ARRAY OPERATIONS            */
@@ -86,44 +94,40 @@ public class Main
 		 * both will be filled randomly 
 		 */
 		
-		beginButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				int[] quickpick = new int[6];
-				int[] winningnumbers = new int[6];
+			int[] quickpick = new int[6];
+			int[] winningnumbers = new int[6];
+		
+			int matches = 0;
+			int days = 0; // how many attemps to find the correct number of matches in the arrays
 			
-				int matches = 0;
-				int days = 0; // how many attemps to find the correct number of matches in the arrays
+			/* Strings to hold the toString versions of the arrays quickpick and winningnumbers
+			*/
+			String quickpickString = "";
+			String winningnumbersString = "";
+
+			while (matches != numbersThatHaveToMatchInt)
+			{
+				LotteryMath.FillArray(quickpick);
+				LotteryMath.FillArray(winningnumbers);
 				
-				/* Strings to hold the toString versions of the arrays quickpick and winningnumbers
-				*/
-				String quickpickString = "";
-				String winningnumbersString = "";
+				quickpickString = LotteryMath.ShowNumbers(quickpick);
+				winningnumbersString = LotteryMath.ShowNumbers(winningnumbers);
+				
+				// return number of matches between quickpick and winningnumbers
+				matches = LotteryMath.CheckIfArraysAreEqual(quickpick, winningnumbers);
 
-				while (matches != 4)
-				{
-					LotteryMath.FillArray(quickpick);
-					LotteryMath.FillArray(winningnumbers);
-					
-					quickpickString = LotteryMath.ShowNumbers(quickpick);
-					winningnumbersString = LotteryMath.ShowNumbers(winningnumbers);
-					
-					// return number of matches between quickpick and winningnumbers
-					matches = LotteryMath.CheckIfArraysAreEqual(quickpick, winningnumbers);
-
-					// display text of quickpick and winning numbers in window
-					
-					WindowMethods.SetLabelText(userNumbers, quickpickString);
-					WindowMethods.SetLabelText(winningNumbers, winningnumbersString);
-					// Display every quickpick and winning numbers array
-					//System.out.println(LotteryMath.ShowNumbers(quickpick));
-					//System.out.println(LotteryMath.ShowNumbers(winningnumbers));
-					
-					System.out.println();
-					
-					days++;
-				} // end while
+				// display text of quickpick and winning numbers in window
+				
+				WindowMethods.SetLabelText(userNumbers, quickpickString);
+				WindowMethods.SetLabelText(winningNumbers, winningnumbersString);
+				// Display every quickpick and winning numbers array
+				//System.out.println(LotteryMath.ShowNumbers(quickpick));
+				//System.out.println(LotteryMath.ShowNumbers(winningnumbers));
+				
+				System.out.println();
+				
+				days++;
+			} // end while
 				
 				/******* RESULTS TEXT *****************/
 				String resultsNumbersThatMatch = "";
@@ -143,6 +147,4 @@ public class Main
 				//TimeConversions.PrintFormatYearWeekDay(days);
 				/********** END RESULTS TEXT ******************/
 			} // end action performed
-		}); // end beginbutton action listener method
 	} // end main
-}
